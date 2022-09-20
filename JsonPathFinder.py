@@ -2,7 +2,7 @@ import json
 from typing import List
 from copy import deepcopy
 import sys
-
+from clip import get_clip
 class JsonPathFinder:
     def __init__(self, json_str, mode='key'):
         self.data = json.loads(json_str)
@@ -52,8 +52,11 @@ class JsonPathFinder:
             vals.append([path,val])
         return vals
 def main():
-    with open(sys.argv[1], ) as f:
-        json_data = f.read()
+    if len(sys.argv)==2:
+        with open(sys.argv[1], ) as f:
+            json_data = f.read()
+    else:
+        json_data=get_clip()
     finder = JsonPathFinder(json_data)
     all_val=finder.find_all_val("picUrl")
     for index,val in  enumerate(all_val):
