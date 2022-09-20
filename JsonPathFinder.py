@@ -1,6 +1,7 @@
 import json
 from typing import List
-
+from copy import deepcopy
+import sys
 
 class JsonPathFinder:
     def __init__(self, json_str, mode='key'):
@@ -35,26 +36,27 @@ class JsonPathFinder:
     def find_all(self, target) -> List[list]:
         path_iter = self.iter_node(self.data, [], target)
         return list(path_iter)
-
-
-if __name__ == '__main__':
-    with open('sample.json', ) as f:
+    def get_val(self,path):
+        value=self.data
+        for step in path:
+            value = value[step]
+        return deepcopy(value)
+    def find_val(self,target):
+        path=self.find_one(target)
+        return [path,self.get_val(path)]
+    def find_all_val(self,target):
+        paths=self.find_all(target)
+        vals=[]
+        for path in paths:
+            val=self.get_val(path)
+            vals.append([path,val])
+        return vals
+def main():
+    with open(sys.argv[1], ) as f:
         json_data = f.read()
-
-    print('开始测试按 Key 搜索...')
     finder = JsonPathFinder(json_data)
-    path_list = finder.find_all('full_text')
-    data = finder.data
-    for path in path_list:
-        print(path)
-
-    print('开始测试按 Value 搜索：...')
-
-    # value_finder = JsonPathFinder(json_data, mode='value')
-    # path_lits = value_finder.find_all(103)
-    # for path in path_lits:
-    #     print('path: ', path)
-    #     value = json.loads(json_data)
-    #     for step in path:
-    #         value = value[step]
-    #     assert value == 103
+    all_val=finder.find_all_val("picUrl")
+    for index,val in  enumerate(all_val):
+        print(index,val[0],"\n",val[1])
+if __name__ == '__main__':
+   main()
