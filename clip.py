@@ -40,4 +40,4 @@ def get_clip():
         p = subprocess.Popen(['pbpaste'], stdout=subprocess.PIPE)
         retcode = p.wait()
         copy_text = p.stdout.read()
-    return copy_text
+    return copy_text.decode()

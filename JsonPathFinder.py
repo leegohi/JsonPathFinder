@@ -1,11 +1,12 @@
-import json
 from typing import List
 from copy import deepcopy
 import sys
 from clip import get_clip
+from json_loader import load_json
+
 class JsonPathFinder:
     def __init__(self, json_str, mode='key'):
-        self.data = json.loads(json_str)
+        self.data = load_json(json_str) 
         self.mode = mode
 
     def iter_node(self, rows, road_step, target):
@@ -58,7 +59,8 @@ def main():
     else:
         json_data=get_clip()
     finder = JsonPathFinder(json_data)
-    all_val=finder.find_all_val("picUrl")
+    key=input("输入json关键字key:")
+    all_val=finder.find_all_val(key)
     for index,val in  enumerate(all_val):
         print(index,val[0],"\n",val[1])
 if __name__ == '__main__':
